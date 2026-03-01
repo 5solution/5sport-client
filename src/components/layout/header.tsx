@@ -129,14 +129,14 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-secondary"
+                  className="text-sm font-medium text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95"
                   onClick={() => openAuth("login")}
                 >
                   {t("login")}
                 </Button>
                 <Button
                   size="sm"
-                  className="bg-primary text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30"
+                  className="bg-primary text-sm font-semibold text-white shadow-sm shadow-primary/25 transition-all duration-200 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-95"
                   onClick={() => openAuth("register")}
                 >
                   {t("register")}
