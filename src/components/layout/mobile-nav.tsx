@@ -25,7 +25,7 @@ export function MobileNav({ onOpenAuth, user, onSignOut }: MobileNavProps) {
 
   const navItems = [
     { href: "/", label: t("home") },
-    { href: "/tournaments", label: t("tournaments") },
+    { href: "/events", label: t("tournaments") },
     { href: "/clubs", label: t("clubs") },
     { href: "/groups", label: t("groups") },
   ];
