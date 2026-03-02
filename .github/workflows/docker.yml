@@ -7,25 +7,23 @@ on:
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/5sport-client
+  API_URL_DEV: https://dapi-sport.5solution.vn
+  API_URL_PROD: https://api.5sport.vn
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    # Uses GitHub Environment to pick the right NEXT_PUBLIC_API_URL per branch
-    environment: ${{ github.ref_name == 'main' && 'production' || 'development' }}
-
     env:
       ENV_SUFFIX: ${{ github.ref_name == 'main' && 'latest' || 'dev' }}
+      API_URL: ${{ github.ref_name == 'main' && 'https://api.5sport.vn' || 'https://dapi-sport.5solution.vn' }}
 
     steps:
       - name: Debug context
         run: |
-          echo "ref_name      : ${{ github.ref_name }}"
-          echo "ref           : ${{ github.ref }}"
-          echo "environment   : ${{ github.ref_name == 'main' && 'production' || 'development' }}"
-          echo "ENV_SUFFIX    : ${{ env.ENV_SUFFIX }}"
-          echo "API_URL       : ${{ vars.NEXT_PUBLIC_API_URL }}"
+          echo "ref_name  : ${{ github.ref_name }}"
+          echo "ENV_SUFFIX: ${{ env.ENV_SUFFIX }}"
+          echo "API_URL   : ${{ env.API_URL }}"
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,6 +54,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_API_URL=${{ env.API_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
