@@ -400,10 +400,10 @@ export default function EventDetailPage({
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-3">
                               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">
-                                {(p.athlete?.displayName ?? p.user?.email ?? "?").charAt(0).toUpperCase()}
+                                {(p.athlete?.name ?? p.user?.email ?? "?").charAt(0).toUpperCase()}
                               </div>
                               <span className="font-medium text-secondary">
-                                {p.athlete?.displayName ?? p.user?.email ?? "—"}
+                                {p.athlete?.name ?? p.user?.email ?? "—"}
                               </span>
                             </div>
                           </td>
