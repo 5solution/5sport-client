@@ -19,6 +19,14 @@ jobs:
       ENV_SUFFIX: ${{ github.ref_name == 'main' && 'latest' || 'dev' }}
 
     steps:
+      - name: Debug context
+        run: |
+          echo "ref_name      : ${{ github.ref_name }}"
+          echo "ref           : ${{ github.ref }}"
+          echo "environment   : ${{ github.ref_name == 'main' && 'production' || 'development' }}"
+          echo "ENV_SUFFIX    : ${{ env.ENV_SUFFIX }}"
+          echo "API_URL       : ${{ vars.NEXT_PUBLIC_API_URL }}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
