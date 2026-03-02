@@ -46,7 +46,7 @@ export default function EventsPage() {
     <div className="mx-auto max-w-container px-6 py-10 lg:px-20">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-secondary">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
           {t("title")}
         </h1>
         <p className="mt-2 text-base text-slate-500">{t("subtitle")}</p>

@@ -32,7 +32,7 @@ export function GroupCard({ name, image, members }: GroupCardProps) {
         </div>
         <Button
           size="sm"
-          className="mt-3 w-full bg-accent text-xs font-bold text-white shadow-sm shadow-emerald-200 transition-all duration-200 hover:bg-emerald-600 hover:shadow-md hover:shadow-emerald-300"
+          className="mt-3 w-full bg-primary text-xs font-bold text-white shadow-sm shadow-primary/20 transition-all duration-200 hover:bg-primary/90 hover:shadow-md hover:shadow-primary/30"
         >
           {t("join")}
         </Button>

@@ -66,9 +66,8 @@ pnpm generate:api     # Generate API hooks from Swagger (orval)
 
 ### Styling — Modern Sports Brand (Nike-inspired)
 - **Design style:** Vibrant, block-based, premium sports tech
-- **Primary:** `#2563EB` (Electric Blue) — `hsl(217 91% 53%)`
-- **Secondary:** `#0F172A` (Deep Navy) — for headers, footer, strong text
-- **Accent/CTA:** `#22C55E` (Neon Green) — highlights, join buttons (use sparingly)
+- **Primary:** `#0000FF` (Pure Blue) — `hsl(240 100% 50%)`
+- **Secondary:** `#ECF86E` (Electric Lime) — `hsl(65 91% 70%)` — CTA, login button; always use dark text (`secondary-foreground`) on this color
 - **Background:** `#FFFFFF` white, sections use `#F1F5F9` (slate-50/muted)
 - **Text primary:** `#0B1220`, Text secondary: `#475569` (slate-500)
 - **Border:** `#E2E8F0` (slate-200)
