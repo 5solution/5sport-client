@@ -43,69 +43,75 @@ export default function EventsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-container px-6 py-10 lg:px-20">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
-          {t("title")}
-        </h1>
-        <p className="mt-2 text-base text-slate-500">{t("subtitle")}</p>
-      </div>
-
-      {/* Filters */}
-      <EventsFilter
-        search={search}
-        onSearchChange={handleSearchChange}
-        sportType={sportType}
-        onSportTypeChange={handleSportTypeChange}
-      />
-
-      {/* Results */}
-      {isLoading ? (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="overflow-hidden rounded-xl border border-slate-200">
-              <Skeleton className="aspect-[21/9] w-full" />
-              <div className="space-y-3 p-5">
-                <Skeleton className="h-5 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-2/3" />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : events.length === 0 ? (
-        <div className="mt-20 flex flex-col items-center text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
-            <CalendarX className="h-8 w-8 text-slate-400" />
+    <>
+      <div className="mx-auto max-w-container px-6 lg:px-20">
+        {/* Hero Banner */}
+        <section className="border border-slate-200 rounded-2xl bg-accent mt-6 mb-8">
+          <div className="px-6 py-16 lg:px-10 lg:py-20">
+            <h1 className="text-4xl font-black uppercase leading-tight tracking-tighter text-accent-foreground md:text-5xl lg:text-6xl">
+              Discover Sports Events
+            </h1>
+            <p className="mt-4 max-w-2xl text-lg text-accent-foreground/90 md:text-xl">
+              Join exciting competitions and connect with athletes
+            </p>
           </div>
-          <h3 className="mt-4 text-lg font-bold text-secondary">
-            {t("noEvents")}
-          </h3>
-          <p className="mt-1 text-sm text-slate-500">{t("noEventsDesc")}</p>
-        </div>
-      ) : (
-        <>
+        </section>
+
+        {/* Filters */}
+        <EventsFilter
+          search={search}
+          onSearchChange={handleSearchChange}
+          sportType={sportType}
+          onSportTypeChange={handleSportTypeChange}
+        />
+
+        {/* Results */}
+        {isLoading ? (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="overflow-hidden rounded-xl border border-slate-200">
+                <Skeleton className="aspect-[21/9] w-full" />
+                <div className="space-y-3 p-5">
+                  <Skeleton className="h-5 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              </div>
             ))}
           </div>
-
-          {hasMore && (
-            <div className="mt-10 flex justify-center">
-              <Button
-                variant="outline"
-                className="px-8"
-                onClick={() => setPage((p) => p + 1)}
-              >
-                {t("loadMore")}
-              </Button>
+        ) : events.length === 0 ? (
+          <div className="mt-20 flex flex-col items-center text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-100">
+              <CalendarX className="h-8 w-8 text-slate-400" />
             </div>
-          )}
-        </>
-      )}
-    </div>
+            <h3 className="mt-4 text-lg font-bold text-secondary">
+              {t("noEvents")}
+            </h3>
+            <p className="mt-1 text-sm text-slate-500">{t("noEventsDesc")}</p>
+          </div>
+        ) : (
+          <>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </div>
+
+            {hasMore && (
+              <div className="mt-10 flex justify-center">
+                <Button
+                  variant="outline"
+                  className="px-8"
+                  onClick={() => setPage((p) => p + 1)}
+                >
+                  {t("loadMore")}
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }
