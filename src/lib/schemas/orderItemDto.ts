@@ -5,9 +5,11 @@
  * API documentation for 5Sport authentication and services
  * OpenAPI spec version: 1.0
  */
-import type { RunnerInfoDto } from './runnerInfoDto';
+import type { AthleteInfoDto } from './athleteInfoDto';
 
 export interface OrderItemDto {
+  /** ID sản phẩm (cự ly) */
   productId: string;
-  runners: RunnerInfoDto[];
+  /** Danh sách vận động viên */
+  athletes: AthleteInfoDto[];
 }

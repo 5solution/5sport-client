@@ -13,6 +13,8 @@ export * from './athleteControllerFindAllSortOrder';
 export * from './athleteControllerFindAllSportType';
 export * from './athleteControllerGetStatsParams';
 export * from './athleteControllerSearchParams';
+export * from './athleteInfoDto';
+export * from './athleteInfoDtoSizeShirt';
 export * from './athleteSportType';
 export * from './athleteStats';
 export * from './authControllerAdminOnly200';

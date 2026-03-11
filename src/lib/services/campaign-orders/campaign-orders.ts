@@ -5,7 +5,10 @@
  * API documentation for 5Sport authentication and services
  * OpenAPI spec version: 1.0
  */
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,528 +21,326 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
-} from "@tanstack/react-query";
+  UseQueryResult
+} from '@tanstack/react-query';
 
 import type {
   CampaignOrderControllerFindAllParams,
-  CreateOrderDto,
-} from "../../schemas";
+  CreateOrderDto
+} from '../../schemas';
 
-import { defaultMutator } from "../../api/axiosInstance";
+import { defaultMutator } from '../../api/axiosInstance';
+
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
+
+
 export type campaignOrderControllerCreateResponse201 = {
-  data: void;
-  status: 201;
+  data: void
+  status: 201
+}
+
+export type campaignOrderControllerCreateResponseSuccess = (campaignOrderControllerCreateResponse201) & {
+  headers: Headers;
 };
+;
 
-export type campaignOrderControllerCreateResponseSuccess =
-  campaignOrderControllerCreateResponse201 & {
-    headers: Headers;
-  };
-export type campaignOrderControllerCreateResponse =
-  campaignOrderControllerCreateResponseSuccess;
+export type campaignOrderControllerCreateResponse = (campaignOrderControllerCreateResponseSuccess)
 
-export const getCampaignOrderControllerCreateUrl = (campaignId: string) => {
-  return `/campaigns/${campaignId}/orders`;
+export const getCampaignOrderControllerCreateUrl = (campaignId: string,) => {
+
+
+  
+
+  return `/campaigns/${campaignId}/orders`
+}
+
+export const campaignOrderControllerCreate = async (campaignId: string,
+    createOrderDto: CreateOrderDto, options?: RequestInit): Promise<campaignOrderControllerCreateResponse> => {
+  
+  return defaultMutator<campaignOrderControllerCreateResponse>(getCampaignOrderControllerCreateUrl(campaignId),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createOrderDto,)
+  }
+);}
+  
+
+
+
+export const getCampaignOrderControllerCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof campaignOrderControllerCreate>>, TError,{campaignId: string;data: CreateOrderDto}, TContext>, request?: SecondParameter<typeof defaultMutator>}
+): UseMutationOptions<Awaited<ReturnType<typeof campaignOrderControllerCreate>>, TError,{campaignId: string;data: CreateOrderDto}, TContext> => {
+
+const mutationKey = ['campaignOrderControllerCreate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof campaignOrderControllerCreate>>, {campaignId: string;data: CreateOrderDto}> = (props) => {
+          const {campaignId,data} = props ?? {};
+
+          return  campaignOrderControllerCreate(campaignId,data,requestOptions)
+        }
+
+
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CampaignOrderControllerCreateMutationResult = NonNullable<Awaited<ReturnType<typeof campaignOrderControllerCreate>>>
+    export type CampaignOrderControllerCreateMutationBody = CreateOrderDto
+    export type CampaignOrderControllerCreateMutationError = unknown
+
+    export const useCampaignOrderControllerCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof campaignOrderControllerCreate>>, TError,{campaignId: string;data: CreateOrderDto}, TContext>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
+        TError,
+        {campaignId: string;data: CreateOrderDto},
+        TContext
+      > => {
+      return useMutation(getCampaignOrderControllerCreateMutationOptions(options), queryClient);
+    }
+    export type campaignOrderControllerFindAllResponse200 = {
+  data: void
+  status: 200
+}
+
+export type campaignOrderControllerFindAllResponseSuccess = (campaignOrderControllerFindAllResponse200) & {
+  headers: Headers;
 };
+;
 
-export const campaignOrderControllerCreate = async (
-  campaignId: string,
-  createOrderDto: CreateOrderDto,
-  options?: RequestInit,
-): Promise<campaignOrderControllerCreateResponse> => {
-  return defaultMutator<campaignOrderControllerCreateResponse>(
-    getCampaignOrderControllerCreateUrl(campaignId),
-    {
-      ...options,
-      method: "POST",
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      body: JSON.stringify(createOrderDto),
-    },
-  );
-};
+export type campaignOrderControllerFindAllResponse = (campaignOrderControllerFindAllResponseSuccess)
 
-export const getCampaignOrderControllerCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
-    TError,
-    { campaignId: string; data: CreateOrderDto },
-    TContext
-  >;
-  request?: SecondParameter<typeof defaultMutator>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
-  TError,
-  { campaignId: string; data: CreateOrderDto },
-  TContext
-> => {
-  const mutationKey = ["campaignOrderControllerCreate"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation &&
-      "mutationKey" in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
-    { campaignId: string; data: CreateOrderDto }
-  > = (props) => {
-    const { campaignId, data } = props ?? {};
-
-    return campaignOrderControllerCreate(campaignId, data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type CampaignOrderControllerCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof campaignOrderControllerCreate>>
->;
-export type CampaignOrderControllerCreateMutationBody = CreateOrderDto;
-export type CampaignOrderControllerCreateMutationError = unknown;
-
-export const useCampaignOrderControllerCreate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
-      TError,
-      { campaignId: string; data: CreateOrderDto },
-      TContext
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof campaignOrderControllerCreate>>,
-  TError,
-  { campaignId: string; data: CreateOrderDto },
-  TContext
-> => {
-  return useMutation(
-    getCampaignOrderControllerCreateMutationOptions(options),
-    queryClient,
-  );
-};
-export type campaignOrderControllerFindAllResponse200 = {
-  data: void;
-  status: 200;
-};
-
-export type campaignOrderControllerFindAllResponseSuccess =
-  campaignOrderControllerFindAllResponse200 & {
-    headers: Headers;
-  };
-export type campaignOrderControllerFindAllResponse =
-  campaignOrderControllerFindAllResponseSuccess;
-
-export const getCampaignOrderControllerFindAllUrl = (
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-) => {
+export const getCampaignOrderControllerFindAllUrl = (campaignId: string,
+    params?: CampaignOrderControllerFindAllParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? "null" : value.toString());
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
   });
 
   const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0
-    ? `/campaigns/${campaignId}/orders?${stringifiedParams}`
-    : `/campaigns/${campaignId}/orders`;
-};
+  return stringifiedParams.length > 0 ? `/campaigns/${campaignId}/orders?${stringifiedParams}` : `/campaigns/${campaignId}/orders`
+}
 
-export const campaignOrderControllerFindAll = async (
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-  options?: RequestInit,
-): Promise<campaignOrderControllerFindAllResponse> => {
-  return defaultMutator<campaignOrderControllerFindAllResponse>(
-    getCampaignOrderControllerFindAllUrl(campaignId, params),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
+export const campaignOrderControllerFindAll = async (campaignId: string,
+    params?: CampaignOrderControllerFindAllParams, options?: RequestInit): Promise<campaignOrderControllerFindAllResponse> => {
+  
+  return defaultMutator<campaignOrderControllerFindAllResponse>(getCampaignOrderControllerFindAllUrl(campaignId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
 
-export const getCampaignOrderControllerFindAllQueryKey = (
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
+
+
+
+export const getCampaignOrderControllerFindAllQueryKey = (campaignId: string,
+    params?: CampaignOrderControllerFindAllParams,) => {
+    return [
+    `/campaigns/${campaignId}/orders`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getCampaignOrderControllerFindAllQueryOptions = <TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError = unknown>(campaignId: string,
+    params?: CampaignOrderControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
 ) => {
-  return [
-    `/campaigns/${campaignId}/orders`,
-    ...(params ? [params] : []),
-  ] as const;
-};
 
-export const getCampaignOrderControllerFindAllQueryOptions = <
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-  TError = unknown,
->(
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getCampaignOrderControllerFindAllQueryKey(campaignId, params);
+  const queryKey =  queryOptions?.queryKey ?? getCampaignOrderControllerFindAllQueryKey(campaignId,params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof campaignOrderControllerFindAll>>
-  > = ({ signal }) =>
-    campaignOrderControllerFindAll(campaignId, params, {
-      signal,
-      ...requestOptions,
-    });
+  
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!campaignId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>> = ({ signal }) => campaignOrderControllerFindAll(campaignId,params, { signal, ...requestOptions });
 
-export type CampaignOrderControllerFindAllQueryResult = NonNullable<
-  Awaited<ReturnType<typeof campaignOrderControllerFindAll>>
->;
-export type CampaignOrderControllerFindAllQueryError = unknown;
+      
 
-export function useCampaignOrderControllerFindAll<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-  TError = unknown,
->(
-  campaignId: string,
-  params: undefined | CampaignOrderControllerFindAllParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CampaignOrderControllerFindAllQueryResult = NonNullable<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>>
+export type CampaignOrderControllerFindAllQueryError = unknown
+
+
+export function useCampaignOrderControllerFindAll<TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError = unknown>(
+ campaignId: string,
+    params: undefined |  CampaignOrderControllerFindAllParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
           TError,
           Awaited<ReturnType<typeof campaignOrderControllerFindAll>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCampaignOrderControllerFindAll<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-  TError = unknown,
->(
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerFindAll<TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
           TError,
           Awaited<ReturnType<typeof campaignOrderControllerFindAll>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCampaignOrderControllerFindAll<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-  TError = unknown,
->(
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerFindAll<TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCampaignOrderControllerFindAll<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-  TError = unknown,
->(
-  campaignId: string,
-  params?: CampaignOrderControllerFindAllParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindAll>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCampaignOrderControllerFindAllQueryOptions(
-    campaignId,
-    params,
-    options,
-  );
+export function useCampaignOrderControllerFindAll<TData = Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerFindAllParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindAll>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCampaignOrderControllerFindAllQueryOptions(campaignId,params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
 
 export type campaignOrderControllerFindOneResponse200 = {
-  data: void;
-  status: 200;
+  data: void
+  status: 200
+}
+
+export type campaignOrderControllerFindOneResponseSuccess = (campaignOrderControllerFindOneResponse200) & {
+  headers: Headers;
 };
+;
 
-export type campaignOrderControllerFindOneResponseSuccess =
-  campaignOrderControllerFindOneResponse200 & {
-    headers: Headers;
-  };
-export type campaignOrderControllerFindOneResponse =
-  campaignOrderControllerFindOneResponseSuccess;
+export type campaignOrderControllerFindOneResponse = (campaignOrderControllerFindOneResponseSuccess)
 
-export const getCampaignOrderControllerFindOneUrl = (
-  campaignId: string,
-  id: string,
+export const getCampaignOrderControllerFindOneUrl = (campaignId: string,
+    id: string,) => {
+
+
+  
+
+  return `/campaigns/${campaignId}/orders/${id}`
+}
+
+export const campaignOrderControllerFindOne = async (campaignId: string,
+    id: string, options?: RequestInit): Promise<campaignOrderControllerFindOneResponse> => {
+  
+  return defaultMutator<campaignOrderControllerFindOneResponse>(getCampaignOrderControllerFindOneUrl(campaignId,id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+
+
+export const getCampaignOrderControllerFindOneQueryKey = (campaignId: string,
+    id: string,) => {
+    return [
+    `/campaigns/${campaignId}/orders/${id}`
+    ] as const;
+    }
+
+    
+export const getCampaignOrderControllerFindOneQueryOptions = <TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError = unknown>(campaignId: string,
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
 ) => {
-  return `/campaigns/${campaignId}/orders/${id}`;
-};
 
-export const campaignOrderControllerFindOne = async (
-  campaignId: string,
-  id: string,
-  options?: RequestInit,
-): Promise<campaignOrderControllerFindOneResponse> => {
-  return defaultMutator<campaignOrderControllerFindOneResponse>(
-    getCampaignOrderControllerFindOneUrl(campaignId, id),
-    {
-      ...options,
-      method: "GET",
-    },
-  );
-};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
-export const getCampaignOrderControllerFindOneQueryKey = (
-  campaignId: string,
-  id: string,
-) => {
-  return [`/campaigns/${campaignId}/orders/${id}`] as const;
-};
+  const queryKey =  queryOptions?.queryKey ?? getCampaignOrderControllerFindOneQueryKey(campaignId,id);
 
-export const getCampaignOrderControllerFindOneQueryOptions = <
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-  TError = unknown,
->(
-  campaignId: string,
-  id: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
+  
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getCampaignOrderControllerFindOneQueryKey(campaignId, id);
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>> = ({ signal }) => campaignOrderControllerFindOne(campaignId,id, { signal, ...requestOptions });
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof campaignOrderControllerFindOne>>
-  > = ({ signal }) =>
-    campaignOrderControllerFindOne(campaignId, id, {
-      signal,
-      ...requestOptions,
-    });
+      
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!(campaignId && id),
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+      
 
-export type CampaignOrderControllerFindOneQueryResult = NonNullable<
-  Awaited<ReturnType<typeof campaignOrderControllerFindOne>>
->;
-export type CampaignOrderControllerFindOneQueryError = unknown;
+   return  { queryKey, queryFn, enabled: !!(campaignId && id), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
 
-export function useCampaignOrderControllerFindOne<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-  TError = unknown,
->(
-  campaignId: string,
-  id: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+export type CampaignOrderControllerFindOneQueryResult = NonNullable<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>>
+export type CampaignOrderControllerFindOneQueryError = unknown
+
+
+export function useCampaignOrderControllerFindOne<TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError = unknown>(
+ campaignId: string,
+    id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
           TError,
           Awaited<ReturnType<typeof campaignOrderControllerFindOne>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCampaignOrderControllerFindOne<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-  TError = unknown,
->(
-  campaignId: string,
-  id: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerFindOne<TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError = unknown>(
+ campaignId: string,
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
           TError,
           Awaited<ReturnType<typeof campaignOrderControllerFindOne>>
-        >,
-        "initialData"
-      >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCampaignOrderControllerFindOne<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-  TError = unknown,
->(
-  campaignId: string,
-  id: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerFindOne<TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError = unknown>(
+ campaignId: string,
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCampaignOrderControllerFindOne<
-  TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-  TError = unknown,
->(
-  campaignId: string,
-  id: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof campaignOrderControllerFindOne>>,
-        TError,
-        TData
-      >
-    >;
-    request?: SecondParameter<typeof defaultMutator>;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCampaignOrderControllerFindOneQueryOptions(
-    campaignId,
-    id,
-    options,
-  );
+export function useCampaignOrderControllerFindOne<TData = Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError = unknown>(
+ campaignId: string,
+    id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerFindOne>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCampaignOrderControllerFindOneQueryOptions(campaignId,id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+
+
+

@@ -12,7 +12,10 @@ export interface CreateOrderDto {
   lastName: string;
   /** Tên */
   firstName: string;
+  /** Email */
   email?: string;
+  /** Số điện thoại */
   phoneNumber: string;
+  /** Danh sách sản phẩm và vận động viên */
   items: OrderItemDto[];
 }
