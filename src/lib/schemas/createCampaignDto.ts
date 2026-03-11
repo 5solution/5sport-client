@@ -14,5 +14,19 @@ export interface CreateCampaignDto {
   bannerUrl?: string;
   startTime: string;
   endTime: string;
+  /** Danh sách cự ly và giá */
+  distances?: string[];
+  /** Tên nhóm */
+  groupName?: string;
+  /** Trưởng nhóm */
+  groupLeader?: string;
+  /** Link nhóm Zalo */
+  zaloGroupUrl?: string;
+  /** Hotline */
+  hotline?: string;
+  /** Link điều lệ giải */
+  regulationsUrl?: string;
+  /** Link fanpage */
+  fanpageUrl?: string;
   paymentConfig?: CreateCampaignDtoPaymentConfig;
 }

@@ -9,7 +9,10 @@ import type { CampaignOrderControllerFindAllPaymentStatus } from './campaignOrde
 
 export type CampaignOrderControllerFindAllParams = {
 paymentStatus?: CampaignOrderControllerFindAllPaymentStatus;
-productId?: string;
+/**
+ * Lọc theo cự ly (km)
+ */
+distance?: number;
 fromDate?: string;
 toDate?: string;
 page?: number;
