@@ -165,7 +165,17 @@
     "quantity": "Số lượng",
     "free": "Miễn phí",
     "perTicket": "/ vé",
-    "noProducts": "Chưa có loại vé nào"
+    "noProducts": "Chưa có loại vé nào",
+    "orderSummary": "Tổng kết đơn hàng",
+    "summaryTicketType": "Loại vé",
+    "summaryPricePerTicket": "Giá mỗi vé",
+    "summaryAthletes": "Số vận động viên",
+    "summaryTotal": "Tổng thanh toán",
+    "notSelected": "Chưa chọn",
+    "confirmTitle": "Xác nhận đặt vé",
+    "confirmDescription": "Vui lòng kiểm tra thông tin đơn hàng trước khi xác nhận.",
+    "confirmButton": "Xác nhận",
+    "cancelButton": "Hủy"
   },
   "common": {
     "language": "Ngôn ngữ",

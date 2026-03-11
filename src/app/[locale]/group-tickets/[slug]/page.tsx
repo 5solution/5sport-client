@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCampaignControllerFindBySlug } from "@/lib/services/campaigns/campaigns";
-import { useCampaignProductControllerFindProducts } from "@/lib/services/campaign-products/campaign-products";
 import { useCampaignOrderControllerCreate } from "@/lib/services/campaign-orders/campaign-orders";
 import { useProvinceControllerListProvinces } from "@/lib/services/provinces/provinces";
 import { AthleteInfoDtoSizeShirt } from "@/lib/schemas/athleteInfoDtoSizeShirt";
@@ -16,6 +15,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -28,6 +34,7 @@ import {
   Loader2,
   CheckCircle2,
   ChevronDown,
+  Receipt,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { AthleteInfoDto } from "@/lib/schemas/athleteInfoDto";
@@ -92,14 +99,9 @@ export default function CampaignDetailPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const campaign: any = (campaignData as any)?.data ?? (campaignData as any);
 
-  const { data: productsData, isLoading: productsLoading } =
-    useCampaignProductControllerFindProducts(campaign?.id ?? "", {
-      query: { enabled: !!campaign?.id },
-    });
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const products: any[] =
-    (productsData as any)?.data ?? (productsData as any) ?? [];
+  // Distances from campaign response (ticket types)
+  const distances: { distance: string; price: number }[] =
+    campaign?.distances ?? [];
 
   const { data: provincesData } = useProvinceControllerListProvinces();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -109,7 +111,7 @@ export default function CampaignDetailPage() {
   const createOrder = useCampaignOrderControllerCreate();
 
   // Form state
-  const [selectedProductId, setSelectedProductId] = useState<string>("");
+  const [selectedDistance, setSelectedDistance] = useState<string>("");
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -118,6 +120,7 @@ export default function CampaignDetailPage() {
     { ...emptyAthlete },
   ]);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const addAthlete = () => {
     setAthletes((prev) => [...prev, { ...emptyAthlete }]);
@@ -140,7 +143,7 @@ export default function CampaignDetailPage() {
   };
 
   const isFormValid =
-    selectedProductId &&
+    selectedDistance &&
     lastName.trim() &&
     firstName.trim() &&
     phoneNumber.trim() &&
@@ -148,8 +151,12 @@ export default function CampaignDetailPage() {
       (a) => a.lastName.trim() && a.firstName.trim() && a.phoneNumber.trim()
     );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleClickSubmit = () => {
+    if (!isFormValid) return;
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmOrder = async () => {
     if (!isFormValid || !campaign?.id) return;
 
     try {
@@ -160,35 +167,33 @@ export default function CampaignDetailPage() {
           firstName,
           email: email || undefined,
           phoneNumber,
-          items: [
-            {
-              productId: selectedProductId,
-              athletes: athletes.map(
-                (a): AthleteInfoDto => ({
-                  lastName: a.lastName,
-                  firstName: a.firstName,
-                  phoneNumber: a.phoneNumber,
-                  location: a.location || undefined,
-                  national: a.national || undefined,
-                  provinceCode: a.provinceCode || undefined,
-                  dateOfBirth: a.dateOfBirth || undefined,
-                  sizeShirt:
-                    (a.sizeShirt as AthleteInfoDto["sizeShirt"]) || undefined,
-                  club: a.club || undefined,
-                  nameInBib: a.nameInBib || undefined,
-                  medicalInformationPhoneNumber:
-                    a.medicalInformationPhoneNumber || undefined,
-                  medicalInformationName:
-                    a.medicalInformationName || undefined,
-                  medicalInformation: a.medicalInformation || undefined,
-                  typeOfMedicine: a.typeOfMedicine || undefined,
-                  bloodType: a.bloodType || undefined,
-                })
-              ),
-            },
-          ],
+          athletes: athletes.map(
+            (a): AthleteInfoDto => ({
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              distance: selectedDistance as any,
+              lastName: a.lastName,
+              firstName: a.firstName,
+              phoneNumber: a.phoneNumber,
+              location: a.location || undefined,
+              national: a.national || undefined,
+              provinceCode: a.provinceCode || undefined,
+              dateOfBirth: a.dateOfBirth || undefined,
+              sizeShirt:
+                (a.sizeShirt as AthleteInfoDto["sizeShirt"]) || undefined,
+              club: a.club || undefined,
+              nameInBib: a.nameInBib || undefined,
+              medicalInformationPhoneNumber:
+                a.medicalInformationPhoneNumber || undefined,
+              medicalInformationName:
+                a.medicalInformationName || undefined,
+              medicalInformation: a.medicalInformation || undefined,
+              typeOfMedicine: a.typeOfMedicine || undefined,
+              bloodType: a.bloodType || undefined,
+            })
+          ),
         },
       });
+      setShowConfirmModal(false);
       setOrderSuccess(true);
       toast.success(t("orderSuccess"));
     } catch {
@@ -322,49 +327,41 @@ export default function CampaignDetailPage() {
       </div>
 
       {/* Order Form */}
-      <form onSubmit={handleSubmit}>
-        {/* Ticket Types */}
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e.preventDefault();
+        }}
+      >
+        {/* Ticket Types (Distances) */}
         <div className="mb-8">
           <h2 className="mb-4 text-xl font-bold text-foreground">
             {t("selectProduct")}
           </h2>
-          {productsLoading ? (
-            <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full rounded-lg" />
-              ))}
-            </div>
-          ) : products.length === 0 ? (
+          {distances.length === 0 ? (
             <p className="text-sm text-muted-foreground">{t("noProducts")}</p>
           ) : (
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
+              {distances.map((item) => (
                 <button
-                  key={product.id}
+                  key={item.distance}
                   type="button"
-                  onClick={() => setSelectedProductId(product.id)}
+                  onClick={() => setSelectedDistance(item.distance)}
                   className={`w-full cursor-pointer rounded-xl border p-4 text-left transition-all duration-200 ${
-                    selectedProductId === product.id
+                    selectedDistance === item.distance
                       ? "border-primary bg-primary/5 ring-2 ring-primary/20"
                       : "border-slate-200 hover:border-primary/40 hover:bg-slate-50"
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-semibold text-foreground">
-                        {product.name}
-                      </h3>
-                      {product.description && (
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {product.description}
-                        </p>
-                      )}
-                    </div>
+                    <h3 className="font-semibold text-foreground">
+                      {item.distance}
+                    </h3>
                     <div className="ml-4 text-right">
                       <span className="text-lg font-bold text-primary">
-                        {formatPrice(product.originalPrice ?? 0)}
+                        {formatPrice(item.price)}
                       </span>
-                      {product.originalPrice > 0 && (
+                      {item.price > 0 && (
                         <span className="block text-xs text-muted-foreground">
                           {t("perTicket")}
                         </span>
@@ -729,25 +726,176 @@ export default function CampaignDetailPage() {
           </div>
         </div>
 
+        {/* Order Summary */}
+        {(() => {
+          const selectedItem = distances.find(
+            (d) => d.distance === selectedDistance
+          );
+          const ticketPrice = selectedItem?.price ?? 0;
+          const totalAmount = ticketPrice * athletes.length;
+
+          return (
+            <Card className="mb-8 border-slate-200 bg-slate-50">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Receipt className="h-5 w-5 text-primary" />
+                  {t("orderSummary")}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryTicketType")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {selectedDistance || (
+                        <span className="text-muted-foreground">
+                          {t("notSelected")}
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryPricePerTicket")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {selectedItem ? formatPrice(ticketPrice) : "—"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryAthletes")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {athletes.length}
+                    </span>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <span className="text-base font-bold text-foreground">
+                      {t("summaryTotal")}
+                    </span>
+                    <span className="text-xl font-extrabold text-primary">
+                      {selectedItem ? formatPrice(totalAmount) : "—"}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })()}
+
         {/* Submit */}
         <div className="flex justify-end">
           <Button
-            type="submit"
+            type="button"
             size="lg"
-            disabled={!isFormValid || createOrder.isPending}
+            disabled={!isFormValid}
+            onClick={handleClickSubmit}
             className="min-w-[200px] cursor-pointer bg-primary text-white transition-all duration-200 hover:bg-primary/90 disabled:cursor-not-allowed"
           >
-            {createOrder.isPending ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("submitting")}
-              </>
-            ) : (
-              t("submitOrder")
-            )}
+            {t("submitOrder")}
           </Button>
         </div>
       </form>
+
+      {/* Confirm Order Modal */}
+      {(() => {
+        const selectedItem = distances.find(
+          (d) => d.distance === selectedDistance
+        );
+        const ticketPrice = selectedItem?.price ?? 0;
+        const totalAmount = ticketPrice * athletes.length;
+
+        return (
+          <Dialog
+            open={showConfirmModal}
+            onOpenChange={(open) => {
+              if (!createOrder.isPending) setShowConfirmModal(open);
+            }}
+          >
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Receipt className="h-5 w-5 text-primary" />
+                  {t("confirmTitle")}
+                </DialogTitle>
+              </DialogHeader>
+
+              <p className="text-sm text-muted-foreground">
+                {t("confirmDescription")}
+              </p>
+
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryTicketType")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {selectedDistance}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryPricePerTicket")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {formatPrice(ticketPrice)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">
+                      {t("summaryAthletes")}
+                    </span>
+                    <span className="font-medium text-foreground">
+                      {athletes.length}
+                    </span>
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-foreground">
+                      {t("summaryTotal")}
+                    </span>
+                    <span className="text-lg font-extrabold text-primary">
+                      {formatPrice(totalAmount)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter className="gap-2 sm:gap-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowConfirmModal(false)}
+                  disabled={createOrder.isPending}
+                  className="cursor-pointer"
+                >
+                  {t("cancelButton")}
+                </Button>
+                <Button
+                  type="button"
+                  onClick={handleConfirmOrder}
+                  disabled={createOrder.isPending}
+                  className="cursor-pointer bg-primary text-white hover:bg-primary/90"
+                >
+                  {createOrder.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {t("submitting")}
+                    </>
+                  ) : (
+                    t("confirmButton")
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        );
+      })()}
     </div>
   );
 }

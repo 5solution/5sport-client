@@ -165,7 +165,17 @@
     "quantity": "Quantity",
     "free": "Free",
     "perTicket": "/ ticket",
-    "noProducts": "No ticket types available"
+    "noProducts": "No ticket types available",
+    "orderSummary": "Order Summary",
+    "summaryTicketType": "Ticket Type",
+    "summaryPricePerTicket": "Price per ticket",
+    "summaryAthletes": "Number of athletes",
+    "summaryTotal": "Total Amount",
+    "notSelected": "Not selected",
+    "confirmTitle": "Confirm Order",
+    "confirmDescription": "Please review your order details before confirming.",
+    "confirmButton": "Confirm",
+    "cancelButton": "Cancel"
   },
   "common": {
     "language": "Language",
