@@ -183,7 +183,19 @@
     "confirmTitle": "Confirm Order",
     "confirmDescription": "Please review your order details before confirming.",
     "confirmButton": "Confirm",
-    "cancelButton": "Cancel"
+    "cancelButton": "Cancel",
+    "groupName": "Group",
+    "groupLeader": "Group Leader",
+    "hotline": "Hotline",
+    "zaloGroup": "Zalo Group",
+    "joinZalo": "Join",
+    "regulations": "Regulations",
+    "viewRegulations": "View regulations",
+    "fanpage": "Fanpage",
+    "visitFanpage": "Visit",
+    "campaignInfo": "Event Information",
+    "runnerDistance": "Distance",
+    "runnerSelectDistance": "Select distance"
   },
   "common": {
     "language": "Language",

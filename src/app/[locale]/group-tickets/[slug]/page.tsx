@@ -35,6 +35,12 @@ import {
   Loader2,
   ChevronDown,
   Receipt,
+  Users,
+  UserCheck,
+  Phone,
+  MessageCircle,
+  FileText,
+  ExternalLink,
 } from "lucide-react";
 import { toast } from "sonner";
 import type { AthleteInfoDto } from "@/lib/schemas/athleteInfoDto";
@@ -59,6 +65,7 @@ interface AthleteForm {
   medicalInformation: string;
   typeOfMedicine: string;
   bloodType: string;
+  distance: string;
 }
 
 const emptyAthlete: AthleteForm = {
@@ -77,6 +84,7 @@ const emptyAthlete: AthleteForm = {
   medicalInformation: "",
   typeOfMedicine: "",
   bloodType: "",
+  distance: "",
 };
 
 const inputClass =
@@ -111,7 +119,6 @@ export default function CampaignDetailPage() {
   const createOrder = useCampaignOrderControllerCreate();
 
   // Form state
-  const [selectedDistance, setSelectedDistance] = useState<string>("");
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
@@ -142,12 +149,15 @@ export default function CampaignDetailPage() {
   };
 
   const isFormValid =
-    selectedDistance &&
     lastName.trim() &&
     firstName.trim() &&
     phoneNumber.trim() &&
     athletes.every(
-      (a) => a.lastName.trim() && a.firstName.trim() && a.phoneNumber.trim()
+      (a) =>
+        a.distance &&
+        a.lastName.trim() &&
+        a.firstName.trim() &&
+        a.phoneNumber.trim()
     );
 
   const handleClickSubmit = () => {
@@ -172,7 +182,7 @@ export default function CampaignDetailPage() {
           athletes: athletes.map(
             (a): AthleteInfoDto => ({
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              distance: selectedDistance as any,
+              distance: a.distance as any,
               lastName: a.lastName,
               firstName: a.firstName,
               phoneNumber: a.phoneNumber,
@@ -194,7 +204,7 @@ export default function CampaignDetailPage() {
             })
           ),
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       })) as any;
 
       orderCode = res?.orderCode;
@@ -341,6 +351,84 @@ export default function CampaignDetailPage() {
             {campaign.description}
           </p>
         )}
+
+        {/* Campaign Group Info */}
+        {(campaign.groupName || campaign.groupLeader || campaign.hotline || campaign.zaloGroupUrl || campaign.regulationsUrl || campaign.fanpageUrl) && (
+          <Card className="mt-6 border-slate-200">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Users className="h-5 w-5 text-primary" />
+                {t("campaignInfo")}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {campaign.groupName && (
+                  <div className="flex items-center gap-3">
+                    <Users className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("groupName")}</p>
+                      <p className="text-sm font-medium text-foreground">{campaign.groupName}</p>
+                    </div>
+                  </div>
+                )}
+                {campaign.groupLeader && (
+                  <div className="flex items-center gap-3">
+                    <UserCheck className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("groupLeader")}</p>
+                      <p className="text-sm font-medium text-foreground">{campaign.groupLeader}</p>
+                    </div>
+                  </div>
+                )}
+                {campaign.hotline && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("hotline")}</p>
+                      <a href={`tel:${campaign.hotline}`} className="text-sm font-medium text-primary hover:underline">
+                        {campaign.hotline}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {campaign.zaloGroupUrl && (
+                  <div className="flex items-center gap-3">
+                    <MessageCircle className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("zaloGroup")}</p>
+                      <a href={campaign.zaloGroupUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                        {t("joinZalo")} <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {campaign.regulationsUrl && (
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("regulations")}</p>
+                      <a href={campaign.regulationsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                        {t("viewRegulations")} <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {campaign.fanpageUrl && (
+                  <div className="flex items-center gap-3">
+                    <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                    <div>
+                      <p className="text-xs text-muted-foreground">{t("fanpage")}</p>
+                      <a href={campaign.fanpageUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+                        {t("visitFanpage")} <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Order Form */}
@@ -350,49 +438,6 @@ export default function CampaignDetailPage() {
           if (e.key === "Enter") e.preventDefault();
         }}
       >
-        {/* Ticket Types (Distances) */}
-        <div className="mb-8">
-          <h2 className="mb-4 text-xl font-bold text-foreground">
-            {t("selectProduct")}
-          </h2>
-          {distances.length === 0 ? (
-            <p className="text-sm text-muted-foreground">{t("noProducts")}</p>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {distances.map((item) => (
-                <button
-                  key={item.distance}
-                  type="button"
-                  onClick={() => setSelectedDistance(item.distance)}
-                  className={`w-full cursor-pointer rounded-xl border p-4 text-left transition-all duration-200 ${
-                    selectedDistance === item.distance
-                      ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                      : "border-slate-200 hover:border-primary/40 hover:bg-slate-50"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-foreground">
-                      {item.distance}
-                    </h3>
-                    <div className="ml-4 text-right">
-                      <span className="text-lg font-bold text-primary">
-                        {formatPrice(item.price)}
-                      </span>
-                      {item.price > 0 && (
-                        <span className="block text-xs text-muted-foreground">
-                          {t("perTicket")}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <Separator className="mb-8" />
-
         {/* Contact Info */}
         <Card className="mb-8 border-slate-200">
           <CardHeader>
@@ -486,6 +531,38 @@ export default function CampaignDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {/* Distance selection */}
+                    <div className="relative sm:col-span-2 lg:col-span-3">
+                      <label className={labelClass}>
+                        {t("runnerDistance")} *
+                      </label>
+                      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                        {distances.map((item) => (
+                          <button
+                            key={item.distance}
+                            type="button"
+                            onClick={() =>
+                              updateAthlete(index, "distance", item.distance)
+                            }
+                            className={`w-full cursor-pointer rounded-lg border px-3 py-2 text-left text-sm transition-all duration-200 ${
+                              athlete.distance === item.distance
+                                ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                                : "border-slate-200 hover:border-primary/40 hover:bg-slate-50"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="font-medium text-foreground">
+                                {item.distance}
+                              </span>
+                              <span className="font-bold text-primary">
+                                {formatPrice(item.price)}
+                              </span>
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                     {/* Required fields */}
                     <div>
                       <label className={labelClass}>
@@ -745,11 +822,10 @@ export default function CampaignDetailPage() {
 
         {/* Order Summary */}
         {(() => {
-          const selectedItem = distances.find(
-            (d) => d.distance === selectedDistance
-          );
-          const ticketPrice = selectedItem?.price ?? 0;
-          const totalAmount = ticketPrice * athletes.length;
+          const totalAmount = athletes.reduce((sum, a) => {
+            const found = distances.find((d) => d.distance === a.distance);
+            return sum + (found?.price ?? 0);
+          }, 0);
 
           return (
             <Card className="mb-8 border-slate-200 bg-slate-50">
@@ -761,41 +837,32 @@ export default function CampaignDetailPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryTicketType")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {selectedDistance || (
+                  {athletes.map((a, i) => {
+                    const found = distances.find(
+                      (d) => d.distance === a.distance
+                    );
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between text-sm"
+                      >
                         <span className="text-muted-foreground">
-                          {t("notSelected")}
+                          {t("runner")} {i + 1}:{" "}
+                          {a.distance || t("notSelected")}
                         </span>
-                      )}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryPricePerTicket")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {selectedItem ? formatPrice(ticketPrice) : "—"}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryAthletes")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {athletes.length}
-                    </span>
-                  </div>
+                        <span className="font-medium text-foreground">
+                          {found ? formatPrice(found.price) : "—"}
+                        </span>
+                      </div>
+                    );
+                  })}
                   <Separator />
                   <div className="flex items-center justify-between">
                     <span className="text-base font-bold text-foreground">
                       {t("summaryTotal")}
                     </span>
                     <span className="text-xl font-extrabold text-primary">
-                      {selectedItem ? formatPrice(totalAmount) : "—"}
+                      {formatPrice(totalAmount)}
                     </span>
                   </div>
                 </div>
@@ -820,11 +887,10 @@ export default function CampaignDetailPage() {
 
       {/* Confirm Order Modal */}
       {(() => {
-        const selectedItem = distances.find(
-          (d) => d.distance === selectedDistance
-        );
-        const ticketPrice = selectedItem?.price ?? 0;
-        const totalAmount = ticketPrice * athletes.length;
+        const totalAmount = athletes.reduce((sum, a) => {
+          const found = distances.find((d) => d.distance === a.distance);
+          return sum + (found?.price ?? 0);
+        }, 0);
 
         return (
           <Dialog
@@ -847,30 +913,24 @@ export default function CampaignDetailPage() {
 
               <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <div className="space-y-2.5">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryTicketType")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {selectedDistance}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryPricePerTicket")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {formatPrice(ticketPrice)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {t("summaryAthletes")}
-                    </span>
-                    <span className="font-medium text-foreground">
-                      {athletes.length}
-                    </span>
-                  </div>
+                  {athletes.map((a, i) => {
+                    const found = distances.find(
+                      (d) => d.distance === a.distance
+                    );
+                    return (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between text-sm"
+                      >
+                        <span className="text-muted-foreground">
+                          {t("runner")} {i + 1}: {a.distance}
+                        </span>
+                        <span className="font-medium text-foreground">
+                          {found ? formatPrice(found.price) : "—"}
+                        </span>
+                      </div>
+                    );
+                  })}
                   <Separator />
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-foreground">

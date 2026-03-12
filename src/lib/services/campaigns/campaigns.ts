@@ -26,6 +26,7 @@ import type {
 
 import type {
   CampaignControllerFindPublicParams,
+  CampaignPublicResponseDto,
   CreateCampaignDto,
   UpdateCampaignDto,
   UpdateCampaignStatusDto
@@ -219,7 +220,7 @@ export function useCampaignControllerFindAll<TData = Awaited<ReturnType<typeof c
 
 
 export type campaignControllerFindPublicResponse200 = {
-  data: void
+  data: CampaignPublicResponseDto[]
   status: 200
 }
 
@@ -330,7 +331,7 @@ export function useCampaignControllerFindPublic<TData = Awaited<ReturnType<typeo
 
 
 export type campaignControllerFindBySlugResponse200 = {
-  data: void
+  data: CampaignPublicResponseDto
   status: 200
 }
 

@@ -15,4 +15,5 @@ export const CreateEventDtoPaymentMethodsItem = {
   DOMESTIC_CARD: 'DOMESTIC_CARD',
   PAYX_QR: 'PAYX_QR',
   PAYX_DOMESTIC: 'PAYX_DOMESTIC',
+  SEPAY_BANK_TRANSFER: 'SEPAY_BANK_TRANSFER',
 } as const;

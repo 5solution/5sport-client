@@ -8,8 +8,8 @@
 import type { AthleteInfoDtoSizeShirt } from './athleteInfoDtoSizeShirt';
 
 export interface AthleteInfoDto {
-  /** Cự ly đăng ký (km) */
-  distance: number;
+  /** Cự ly đăng ký */
+  distance: string;
   /** Họ và tên đệm */
   lastName: string;
   /** Tên */

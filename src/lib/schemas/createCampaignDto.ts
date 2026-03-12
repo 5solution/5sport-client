@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0
  */
 import type { CreateCampaignDtoPaymentConfig } from './createCampaignDtoPaymentConfig';
+import type { DistanceItemDto } from './distanceItemDto';
 
 export interface CreateCampaignDto {
   name: string;
@@ -15,7 +16,7 @@ export interface CreateCampaignDto {
   startTime: string;
   endTime: string;
   /** Danh sách cự ly và giá */
-  distances?: string[];
+  distances?: DistanceItemDto[];
   /** Tên nhóm */
   groupName?: string;
   /** Trưởng nhóm */

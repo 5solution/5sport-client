@@ -13,5 +13,6 @@ export const CampaignOrderControllerFindAllPaymentStatus = {
   PENDING: 'PENDING',
   PAID: 'PAID',
   FAILED: 'FAILED',
+  CANCELED: 'CANCELED',
   REFUNDED: 'REFUNDED',
 } as const;

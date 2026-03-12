@@ -26,7 +26,8 @@ import type {
 
 import type {
   CampaignOrderControllerFindAllParams,
-  CreateOrderDto
+  CreateOrderDto,
+  CreateOrderResponseDto
 } from '../../schemas';
 
 import { defaultMutator } from '../../api/axiosInstance';
@@ -37,7 +38,7 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 export type campaignOrderControllerCreateResponse201 = {
-  data: void
+  data: CreateOrderResponseDto
   status: 201
 }
 

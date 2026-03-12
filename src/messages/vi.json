@@ -183,7 +183,19 @@
     "confirmTitle": "Xác nhận đặt vé",
     "confirmDescription": "Vui lòng kiểm tra thông tin đơn hàng trước khi xác nhận.",
     "confirmButton": "Xác nhận",
-    "cancelButton": "Hủy"
+    "cancelButton": "Hủy",
+    "groupName": "Nhóm",
+    "groupLeader": "Trưởng nhóm",
+    "hotline": "Hotline",
+    "zaloGroup": "Nhóm Zalo",
+    "joinZalo": "Tham gia",
+    "regulations": "Thể lệ",
+    "viewRegulations": "Xem thể lệ",
+    "fanpage": "Fanpage",
+    "visitFanpage": "Truy cập",
+    "campaignInfo": "Thông tin sự kiện",
+    "runnerDistance": "Cự ly",
+    "runnerSelectDistance": "Chọn cự ly"
   },
   "common": {
     "language": "Ngôn ngữ",
