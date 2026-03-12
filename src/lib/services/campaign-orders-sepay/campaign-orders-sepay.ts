@@ -6,17 +6,27 @@
  * OpenAPI spec version: 1.0
  */
 import {
-  useMutation
+  useMutation,
+  useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
-  UseMutationResult
+  UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
   InitSepayPaymentDto,
+  OrderPublicResponseDto,
   SepayIpnPayloadDto
 } from '../../schemas';
 
@@ -113,6 +123,116 @@ export const useCampaignOrderSepayControllerInitPayment = <TError = unknown,
       return useMutation(getCampaignOrderSepayControllerInitPaymentMutationOptions(options), queryClient);
     }
     /**
+ * @summary Get public order summary (no auth required)
+ */
+export type campaignOrderSepayControllerFindOnePublicResponse200 = {
+  data: OrderPublicResponseDto
+  status: 200
+}
+
+export type campaignOrderSepayControllerFindOnePublicResponseSuccess = (campaignOrderSepayControllerFindOnePublicResponse200) & {
+  headers: Headers;
+};
+;
+
+export type campaignOrderSepayControllerFindOnePublicResponse = (campaignOrderSepayControllerFindOnePublicResponseSuccess)
+
+export const getCampaignOrderSepayControllerFindOnePublicUrl = (orderCode: string,) => {
+
+
+  
+
+  return `/orders/${orderCode}/public`
+}
+
+export const campaignOrderSepayControllerFindOnePublic = async (orderCode: string, options?: RequestInit): Promise<campaignOrderSepayControllerFindOnePublicResponse> => {
+  
+  return defaultMutator<campaignOrderSepayControllerFindOnePublicResponse>(getCampaignOrderSepayControllerFindOnePublicUrl(orderCode),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+
+
+export const getCampaignOrderSepayControllerFindOnePublicQueryKey = (orderCode: string,) => {
+    return [
+    `/orders/${orderCode}/public`
+    ] as const;
+    }
+
+    
+export const getCampaignOrderSepayControllerFindOnePublicQueryOptions = <TData = Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError = unknown>(orderCode: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCampaignOrderSepayControllerFindOnePublicQueryKey(orderCode);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>> = ({ signal }) => campaignOrderSepayControllerFindOnePublic(orderCode, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(orderCode), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CampaignOrderSepayControllerFindOnePublicQueryResult = NonNullable<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>>
+export type CampaignOrderSepayControllerFindOnePublicQueryError = unknown
+
+
+export function useCampaignOrderSepayControllerFindOnePublic<TData = Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError = unknown>(
+ orderCode: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>,
+          TError,
+          Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderSepayControllerFindOnePublic<TData = Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError = unknown>(
+ orderCode: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>,
+          TError,
+          Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderSepayControllerFindOnePublic<TData = Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError = unknown>(
+ orderCode: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary Get public order summary (no auth required)
+ */
+
+export function useCampaignOrderSepayControllerFindOnePublic<TData = Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError = unknown>(
+ orderCode: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderSepayControllerFindOnePublic>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getCampaignOrderSepayControllerFindOnePublicQueryOptions(orderCode,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+/**
  * @summary SePay IPN webhook — receives payment confirmation from SePay
  */
 export type campaignOrderSepayControllerProcessIpnResponse200 = {

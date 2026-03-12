@@ -124,6 +124,8 @@ export * from './matchStatus';
 export * from './matchTeam1Score';
 export * from './matchTeam2Score';
 export * from './orderItemDto';
+export * from './orderPublicResponseDto';
+export * from './orderPublicResponseDtoPaymentStatus';
 export * from './participantControllerAssignPartnerBody';
 export * from './provinceControllerGetProvince200';
 export * from './provinceControllerGetProvinceDepth';
