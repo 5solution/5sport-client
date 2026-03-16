@@ -27,6 +27,8 @@ export interface CreateCampaignDto {
   hotline?: string;
   /** Link điều lệ giải */
   regulationsUrl?: string;
+  /** Nội dung thể lệ (Markdown) */
+  regulations?: string;
   /** Link fanpage */
   fanpageUrl?: string;
   /** Danh sách size áo của campaign */

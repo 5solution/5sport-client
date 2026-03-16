@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useCampaignControllerFindBySlug } from "@/lib/services/campaigns/campaigns";
 import { useCampaignOrderControllerCreate } from "@/lib/services/campaign-orders/campaign-orders";
 import { useProvinceControllerListProvinces } from "@/lib/services/provinces/provinces";
@@ -46,6 +48,66 @@ import { toast } from "sonner";
 import type { AthleteInfoDto } from "@/lib/schemas/athleteInfoDto";
 
 const BLOOD_TYPES = ["A", "B", "AB", "O"] as const;
+
+// TODO: replace with campaign.regulations when API is ready
+const MOCK_REGULATIONS = `
+# 1. Đối tượng tham gia
+
+
+- Vận động viên từ **18 tuổi trở lên** (tính đến ngày thi đấu).
+- Vận động viên từ **15–17 tuổi** cần có sự đồng ý bằng văn bản của người giám hộ.
+- Không giới hạn quốc tịch.
+
+## 2. Cự ly thi đấu
+
+| Cự ly | Giới tính | Giới hạn thời gian |
+|-------|-----------|-------------------|
+| 5km   | Nam & Nữ  | 60 phút           |
+| 10km  | Nam & Nữ  | 120 phút          |
+| 21km  | Nam & Nữ  | 3 giờ             |
+| 42km  | Nam & Nữ  | 6 giờ             |
+
+## 3. Thời gian & Địa điểm
+
+- **Ngày thi đấu:** Theo thông báo chính thức của BTC
+- **Địa điểm tập kết:** Quảng trường chính (cổng A)
+- **Giờ xuất phát:** 5:30 SA – 6:00 SA (theo từng cự ly)
+
+## 4. Đăng ký & Thanh toán
+
+1. Điền đầy đủ thông tin trên form đăng ký trực tuyến.
+2. Hoàn tất thanh toán trong vòng **30 phút** sau khi đặt vé.
+3. Vé sẽ được gửi về **email** đăng ký sau khi xác nhận thanh toán.
+
+> ⚠️ **Lưu ý:** Vé đã mua **không được hoàn tiền** trong mọi trường hợp. Có thể chuyển nhượng cho người khác trước ngày thi đấu 7 ngày.
+
+## 5. Bộ kit thi đấu
+
+- Áo thi đấu chính thức
+- BIB số (có chip tính giờ)
+- Túi đựng đồ
+- Huy chương hoàn thành (tất cả VĐV về đích trong thời gian quy định)
+- Nước uống tại các trạm tiếp nước
+
+## 6. Quy định thi đấu
+
+- Bắt buộc đeo **BIB** trong suốt quá trình thi đấu.
+- Không sử dụng phương tiện hỗ trợ (xe đạp, xe máy, v.v.).
+- Tuân thủ hướng dẫn của tình nguyện viên và ban tổ chức.
+- Vi phạm quy định sẽ bị **truất quyền thi đấu**.
+
+## 7. Y tế & An toàn
+
+- BTC bố trí đội ngũ y tế dọc đường đua.
+- Vận động viên có vấn đề sức khỏe nên **tham khảo ý kiến bác sĩ** trước khi đăng ký.
+- Trường hợp khẩn cấp liên hệ hotline: **+84 336 963 998**
+
+## 8. Liên hệ Ban Tổ Chức
+
+- 📧 Email: **info@5sport.vn**
+- 📱 Hotline: **+84 336 963 998**
+- 💬 Zalo Group: Xem link trong thông tin sự kiện
+`.trim();
 
 const COUNTRIES = [
   { code: "VN", name: "Việt Nam", flag: "🇻🇳" },
@@ -143,6 +205,8 @@ export default function CampaignDetailPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const campaign: any = (campaignData as any)?.data ?? (campaignData as any);
 
+  console.log(campaign);
+
   // Distances from campaign response (ticket types)
   const distances: { distance: string; price: number }[] =
     campaign?.distances ?? [];
@@ -174,6 +238,7 @@ export default function CampaignDetailPage() {
     { ...emptyAthlete },
   ]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showRegulations, setShowRegulations] = useState(false);
 
   const addAthlete = () => {
     setAthletes((prev) => [...prev, { ...emptyAthlete }]);
@@ -345,8 +410,6 @@ export default function CampaignDetailPage() {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
     });
   };
 
@@ -443,6 +506,33 @@ export default function CampaignDetailPage() {
             {campaign.description}
           </p>
         )}
+
+        {/* Thể lệ */}
+        {/* TODO: replace MOCK_REGULATIONS with campaign.regulations when API is ready */}
+        <Card className="mt-6 border-slate-200">
+          <CardHeader className={showRegulations ? "pb-3" : ""}>
+            <button
+              type="button"
+              onClick={() => setShowRegulations((prev) => !prev)}
+              className="flex w-full cursor-pointer items-center justify-between"
+            >
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <FileText className="h-5 w-5 text-primary" />
+                {t("regulations")}
+              </CardTitle>
+              <ChevronDown
+                className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${showRegulations ? "rotate-180" : ""}`}
+              />
+            </button>
+          </CardHeader>
+          {showRegulations && (
+            <CardContent className="pt-0">
+              <div className="prose prose-base max-w-none text-foreground prose-headings:font-bold prose-headings:text-foreground prose-h1:mt-8 prose-h1:mb-4 prose-h1:text-xl prose-h1:border-b prose-h1:border-slate-300 prose-h1:pb-2 prose-h2:mt-6 prose-h2:mb-3 prose-h2:border-b prose-h2:border-slate-200 prose-h2:pb-2 prose-h2:text-lg prose-h3:text-base prose-p:text-muted-foreground prose-li:text-muted-foreground prose-strong:text-foreground prose-table:text-sm prose-th:border prose-th:border-slate-200 prose-th:bg-muted prose-th:px-3 prose-th:py-2 prose-th:text-left prose-th:font-semibold prose-th:text-foreground prose-td:border prose-td:border-slate-200 prose-td:px-3 prose-td:py-2 prose-td:text-muted-foreground prose-blockquote:border-l-primary prose-blockquote:bg-primary/5 prose-blockquote:py-1 prose-blockquote:text-muted-foreground prose-a:text-primary">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{campaign.regulations ?? MOCK_REGULATIONS}</ReactMarkdown>
+              </div>
+            </CardContent>
+          )}
+        </Card>
 
         {/* Campaign Group Info */}
         {(campaign.groupName || campaign.groupLeader || campaign.hotline || campaign.zaloGroupUrl || campaign.regulationsUrl || campaign.fanpageUrl) && (

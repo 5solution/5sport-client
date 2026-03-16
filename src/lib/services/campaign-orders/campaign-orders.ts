@@ -25,6 +25,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CampaignOrderControllerExportExcelParams,
   CampaignOrderControllerFindAllParams,
   CreateOrderDto,
   CreateOrderResponseDto
@@ -336,6 +337,125 @@ export function useCampaignOrderControllerFindOne<TData = Awaited<ReturnType<typ
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getCampaignOrderControllerFindOneQueryOptions(campaignId,id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+export type campaignOrderControllerExportExcelResponse200 = {
+  data: void
+  status: 200
+}
+
+export type campaignOrderControllerExportExcelResponseSuccess = (campaignOrderControllerExportExcelResponse200) & {
+  headers: Headers;
+};
+;
+
+export type campaignOrderControllerExportExcelResponse = (campaignOrderControllerExportExcelResponseSuccess)
+
+export const getCampaignOrderControllerExportExcelUrl = (campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/campaigns/${campaignId}/orders/export/excel?${stringifiedParams}` : `/campaigns/${campaignId}/orders/export/excel`
+}
+
+export const campaignOrderControllerExportExcel = async (campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams, options?: RequestInit): Promise<campaignOrderControllerExportExcelResponse> => {
+  
+  return defaultMutator<campaignOrderControllerExportExcelResponse>(getCampaignOrderControllerExportExcelUrl(campaignId,params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+  
+
+
+
+
+export const getCampaignOrderControllerExportExcelQueryKey = (campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams,) => {
+    return [
+    `/campaigns/${campaignId}/orders/export/excel`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+    
+export const getCampaignOrderControllerExportExcelQueryOptions = <TData = Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError = unknown>(campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCampaignOrderControllerExportExcelQueryKey(campaignId,params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>> = ({ signal }) => campaignOrderControllerExportExcel(campaignId,params, { signal, ...requestOptions });
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(campaignId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CampaignOrderControllerExportExcelQueryResult = NonNullable<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>>
+export type CampaignOrderControllerExportExcelQueryError = unknown
+
+
+export function useCampaignOrderControllerExportExcel<TData = Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError = unknown>(
+ campaignId: string,
+    params: undefined |  CampaignOrderControllerExportExcelParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>,
+          TError,
+          Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerExportExcel<TData = Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>,
+          TError,
+          Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCampaignOrderControllerExportExcel<TData = Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useCampaignOrderControllerExportExcel<TData = Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError = unknown>(
+ campaignId: string,
+    params?: CampaignOrderControllerExportExcelParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof campaignOrderControllerExportExcel>>, TError, TData>>, request?: SecondParameter<typeof defaultMutator>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getCampaignOrderControllerExportExcelQueryOptions(campaignId,params,options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
