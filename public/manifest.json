@@ -1,7 +1,7 @@
 {
-  "name": "5Sport - Nền tảng thể thao cộng đồng",
+  "name": "5Sport - Nâng Tầm Trải Nghiệm & Kết Nối Cộng Đồng Thể Thao",
   "short_name": "5Sport",
-  "description": "Kết nối cộng đồng thể thao, thi đấu và phát triển cùng 5Sport",
+  "description": "Nền tảng quản lý giải đấu chuyên nghiệp, bảng xếp hạng VĐV và mạng xã hội kết nối cộng đồng. Level up your game cùng 5Sport ngay hôm nay!",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

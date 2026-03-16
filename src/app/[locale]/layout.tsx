@@ -15,9 +15,9 @@ const inter = Inter({
 });
 
 const BASE_URL = "https://5sport.vn";
-const TITLE = "5Sport - Nền tảng thể thao cộng đồng";
+const TITLE = "5Sport - Nâng Tầm Trải Nghiệm & Kết Nối Cộng Đồng Thể Thao";
 const DESCRIPTION =
-  "5Sport – Kết nối cộng đồng thể thao Việt Nam. Đăng ký thi đấu, mua vé nhóm, theo dõi sự kiện marathon, chạy bộ và các giải thể thao trên toàn quốc.";
+  "Nền tảng quản lý giải đấu chuyên nghiệp, bảng xếp hạng VĐV và mạng xã hội kết nối cộng đồng. Level up your game cùng 5Sport ngay hôm nay!";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -28,7 +28,11 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   keywords: [
     "5Sport",
-    "thể thao cộng đồng",
+    "quản lý giải đấu",
+    "xếp hạng vận động viên",
+    "pickleball vietnam",
+    "cộng đồng thể thao",
+    "kết nối đồng đội",
     "marathon Việt Nam",
     "đăng ký thi đấu",
     "mua vé chạy bộ",
