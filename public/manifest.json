@@ -1,0 +1,21 @@
+{
+  "name": "5Sport - Nền tảng thể thao cộng đồng",
+  "short_name": "5Sport",
+  "description": "Kết nối cộng đồng thể thao, thi đấu và phát triển cùng 5Sport",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0000FF",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
