@@ -54,4 +54,4 @@ jobs:
       - name: deploy
         run: |
           echo "${{ secrets.CI_PRIVATE_KEY }}" > ./id_rsa && chmod 600 ./id_rsa
-          ssh -p 6060 -oStrictHostKeyChecking=no -i ./id_rsa ubuntu@${{ secrets.IP_SEVER }} "set -euxo pipefail; /usr/local/bin/5sport-client-prod-deploy.sh $BRANCH_NAME-$FULL_COMMIT_HASH"
+          ssh -p 6060 -oStrictHostKeyChecking=no -i ./id_rsa ubuntu@${{ secrets.IP_SEVER }} "set -euxo pipefail; echo '${{ secrets.GHCR_PAT }}' | docker login ghcr.io -u LongDao-fivebib --password-stdin; /usr/local/bin/5sport-client-prod-deploy.sh $BRANCH_NAME-$FULL_COMMIT_HASH"
