@@ -17,6 +17,7 @@ import { LogOut, User, ChevronDown } from "lucide-react";
 import { LanguageSwitcher } from "./language-switcher";
 import { MobileNav } from "./mobile-nav";
 import { AuthModal } from "@/components/auth/auth-modal";
+import Script from "next/script";
 
 export function Header() {
   const t = useTranslations("nav");
@@ -156,6 +157,16 @@ export function Header() {
       </header>
 
       <AuthModal open={authOpen} onOpenChange={setAuthOpen} defaultTab={authTab} />
+
+      <div
+        className="zalo-chat-widget"
+        data-oaid="3527677753749430127"
+        data-welcome-message="Bạn cần hỗ trợ, hãy nhắn tin ngay cho tôi!"
+        data-autopopup="2"
+        data-width="300"
+        data-height="300"
+      />
+      <Script src="https://sp.zalo.me/plugins/sdk.js" strategy="lazyOnload" />
     </>
   );
 }
