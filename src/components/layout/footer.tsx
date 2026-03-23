@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 const policyLinks = [
   { key: "about", href: "#" },
@@ -78,6 +79,14 @@ export function Footer() {
                   </a>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/feedback"
+                  className="text-slate-400 transition-colors duration-200 hover:text-white"
+                >
+                  {t("feedback")}
+                </Link>
+              </li>
             </ul>
           </div>
 
