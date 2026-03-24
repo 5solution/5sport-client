@@ -192,6 +192,8 @@ export * from './updateStageDtoConfig';
 export * from './updateStageDtoStageType';
 export * from './updateTicketTierDto';
 export * from './uploadControllerUploadFileBody';
+export * from './upsertMatchScoreDto';
+export * from './upsertMatchScoreDtoDetails';
 export * from './user';
 export * from './userResponseDto';
 export * from './userResponseDtoRole';

@@ -37,6 +37,8 @@ export interface CampaignPublicResponseDto {
   hotline?: string;
   /** Link điều lệ */
   regulationsUrl?: string;
+  /** Nội dung thể lệ (Markdown) */
+  regulations?: string;
   /** Link fanpage */
   fanpageUrl?: string;
   /** Danh sách size áo */
