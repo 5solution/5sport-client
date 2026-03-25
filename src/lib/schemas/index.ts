@@ -121,6 +121,7 @@ export * from './eventControllerUpdateCustomField200';
 export * from './eventControllerUpdateDescription200';
 export * from './eventControllerUpdateSession200';
 export * from './eventControllerUpdateTicketTier200';
+export * from './eventMedia';
 export * from './eventOrderControllerCreate201';
 export * from './eventOrderControllerFindAll200';
 export * from './eventOrderControllerFindAllParams';
