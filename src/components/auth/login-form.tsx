@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuthControllerLogin } from "@/lib/services/authentication/authentication";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import type { AuthUser } from "@/hooks/use-auth";
 
 interface LoginFormProps {
   onSuccess: () => void;
@@ -15,16 +17,16 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { loginWithToken } = useAuth();
 
   const loginMutation = useAuthControllerLogin({
     mutation: {
       onSuccess: (res) => {
-        const data = res as { token?: string; user?: { displayName?: string } };
-        if (data?.token) {
-          localStorage.setItem("authToken", data.token);
+        const data = res as { token?: string; user?: AuthUser };
+        if (data?.token && data?.user) {
+          loginWithToken(data.token, data.user);
           toast.success(t("loginSuccess"));
           onSuccess();
-          window.location.reload();
         }
       },
     },

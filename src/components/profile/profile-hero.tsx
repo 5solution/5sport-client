@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,23 +16,12 @@ const SPORT_TABS = [
 ];
 
 export function ProfileHero() {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("all");
 
-  const user = session?.backendUser ?? session?.user;
-  const displayName =
-    (user && "displayName" in user
-      ? user.displayName
-      : user && "name" in user
-        ? user.name
-        : null) ?? "Vận động viên";
-  const avatar =
-    (user && "avatarUrl" in user
-      ? user.avatarUrl
-      : user && "image" in user
-        ? user.image
-        : null) ?? undefined;
-  const initials = String(displayName).charAt(0).toUpperCase();
+  const displayName = user?.displayName ?? user?.email ?? "Vận động viên";
+  const avatar = user?.avatarUrl;
+  const initials = displayName.charAt(0).toUpperCase();
 
   return (
     <div className="relative">
@@ -61,7 +50,7 @@ export function ProfileHero() {
               {/* Avatar */}
               <div className="relative shrink-0">
                 <Avatar className="h-20 w-20 border-4 border-white shadow-lg md:h-24 md:w-24">
-                  <AvatarImage src={avatar as string | undefined} alt={displayName as string} />
+                  <AvatarImage src={avatar} alt={displayName} />
                   <AvatarFallback className="bg-primary text-2xl font-extrabold text-white md:text-3xl">
                     {initials}
                   </AvatarFallback>
@@ -74,7 +63,7 @@ export function ProfileHero() {
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl font-extrabold tracking-tight text-secondary md:text-2xl">
-                    {displayName as string}
+                    {displayName}
                   </h1>
                   <Badge className="border-0 bg-accent px-2 py-0.5 text-xs font-bold text-secondary">
                     Pro

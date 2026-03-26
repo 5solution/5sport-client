@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useSession, signOut } from "next-auth/react";
 import { Link } from "@/i18n/routing";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,11 +22,9 @@ import Image from "next/image";
 
 export function Header() {
   const t = useTranslations("nav");
-  const { data: session } = useSession();
+  const { user, logout } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
   const [authTab, setAuthTab] = useState<"login" | "register">("login");
-
-  const user = session?.backendUser ?? (session?.user as { name?: string; email?: string; image?: string } | undefined);
 
   const navItems = [
     { href: "/", label: t("home") },
@@ -42,8 +40,7 @@ export function Header() {
   };
 
   const handleSignOut = () => {
-    localStorage.removeItem("authToken");
-    signOut({ redirect: false });
+    logout();
   };
 
   return (
@@ -79,33 +76,13 @@ export function Header() {
                     className="gap-2 text-white hover:bg-accent/90  hover:text-secondary"
                   >
                     <Avatar className="h-7 w-7">
-                      <AvatarImage
-                        src={
-                          ("avatarUrl" in user
-                            ? user.avatarUrl
-                            : "image" in user
-                              ? user.image
-                              : undefined) as string | undefined
-                        }
-                      />
+                      <AvatarImage src={user.avatarUrl} />
                       <AvatarFallback className="bg-primary/10 text-xs font-bold text-primary">
-                        {(
-                          ("displayName" in user
-                            ? user.displayName
-                            : "name" in user
-                              ? user.name
-                              : user.email) ?? "U"
-                        )
-                          ?.charAt(0)
-                          .toUpperCase()}
+                        {(user.displayName ?? user.email ?? "U").charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
                     <span className="max-w-[100px] truncate text-sm font-medium">
-                      {("displayName" in user
-                        ? user.displayName
-                        : "name" in user
-                          ? user.name
-                          : user.email) ?? "User"}
+                      {user.displayName ?? user.email ?? "User"}
                     </span>
                     <ChevronDown className="h-3.5 w-3.5 text-white/60" />
                   </Button>
@@ -147,7 +124,7 @@ export function Header() {
           {/* Mobile Menu */}
           <div className="flex items-center gap-2 md:hidden">
             <LanguageSwitcher />
-            <MobileNav onOpenAuth={openAuth} user={user} onSignOut={handleSignOut} />
+            <MobileNav onOpenAuth={openAuth} user={user ?? undefined} onSignOut={handleSignOut} />
           </div>
         </div>
       </header>

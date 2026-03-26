@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 
+import type { AuthUser } from "@/hooks/use-auth";
+
 interface MobileNavProps {
   onOpenAuth: (tab: "login" | "register") => void;
-  user?: { displayName?: string; name?: string; email?: string; avatarUrl?: string; image?: string } | null;
+  user?: AuthUser;
   onSignOut: () => void;
 }
 
@@ -31,15 +33,8 @@ export function MobileNav({ onOpenAuth, user, onSignOut }: MobileNavProps) {
     { href: "/group-tickets", label: t("groupTickets") },
   ];
 
-  const displayName =
-    (user && "displayName" in user ? user.displayName : undefined) ??
-    (user && "name" in user ? user.name : undefined) ??
-    user?.email ??
-    "User";
-
-  const avatarSrc =
-    (user && "avatarUrl" in user ? user.avatarUrl : undefined) ??
-    (user && "image" in user ? user.image : undefined);
+  const displayName = user?.displayName ?? user?.email ?? "User";
+  const avatarSrc = user?.avatarUrl;
 
   return (
     <Sheet>

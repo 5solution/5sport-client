@@ -23,6 +23,8 @@ import { usePublicEventControllerFindOne } from "@/lib/services/public/public";
 import { useEventOrderControllerCreate } from "@/lib/services/event-orders/event-orders";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AXIOS_INSTANCE as axiosInstance } from "@/lib/api/axiosInstance";
+import { useAuth } from "@/hooks/use-auth";
+import { signIn } from "next-auth/react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -256,9 +258,10 @@ export default function RegisterPage({
 }: {
   params: Promise<{ id: string; locale: string }>;
 }) {
-  const { id } = use(params);
+  const { id, locale } = use(params);
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const { user, isLoading: authLoading } = useAuth();
 
   const [step, setStep] = useState(1);
   const [agreed, setAgreed] = useState(false);
@@ -394,22 +397,41 @@ export default function RegisterPage({
         `/events/${id}/orders/${orderCode}/payment/init`,
         {
           paymentMethod: selectedPayment,
+          returnUrl: `${window.location.origin}/${locale}/events/orders/payment/return?orderCode=${orderCode}`,
         }
       );
 
-      const paymentData = (paymentRes as any)?.data ?? paymentRes as any;
+      // Interceptor unwraps { status, code, data } → data
+      const paymentData = paymentRes.data as Record<string, unknown>;
 
       // 3. Redirect based on payment response
       if (paymentData.paymentUrl) {
-        window.location.href = paymentData.paymentUrl;
+        // VNPay / redirect-based gateway
+        window.location.href = paymentData.paymentUrl as string;
+      } else if (paymentData.qrCodeData && paymentData.accountInfo) {
+        // PAYX merchant_hosted — redirect to QR checkout page
+        const info = paymentData.accountInfo as Record<string, string>;
+        const params = new URLSearchParams({
+          orderCode: (paymentData.orderCode ?? orderCode) as string,
+          amount: String(paymentData.amount ?? 0),
+          accNo: info.accountNumber ?? "",
+          accName: info.accountName ?? "",
+          bank: info.bankShortName ?? "",
+          bankFull: info.bankFullName ?? "",
+          desc: info.transferDescription ?? "",
+          expire: String(paymentData.expireDate ?? ""),
+        });
+        router.push(`/events/orders/payment/checkout?${params.toString()}`);
       } else if (paymentData.formFields && paymentData.checkoutUrl) {
         // SePay-style hidden form POST
         const form = formRef.current;
         if (form) {
-          form.action = paymentData.checkoutUrl;
+          form.action = paymentData.checkoutUrl as string;
           form.method = "POST";
           form.innerHTML = "";
-          for (const [key, value] of Object.entries(paymentData.formFields)) {
+          for (const [key, value] of Object.entries(
+            paymentData.formFields as Record<string, string>,
+          )) {
             const input = document.createElement("input");
             input.type = "hidden";
             input.name = key;
@@ -418,10 +440,12 @@ export default function RegisterPage({
           }
           form.submit();
         }
-      } else if (paymentData.qrData) {
-        // QR display (PAYX)
-        toast.info("Vui lòng quét mã QR để thanh toán");
-        // TODO: show QR modal
+      } else if (paymentData.orderCode || paymentData.displayMode) {
+        // Fallback — redirect to payment return page
+        const code = (paymentData.orderCode ?? orderCode) as string;
+        router.push(
+          `/events/orders/payment/return?orderCode=${code}`,
+        );
       } else {
         toast.error("Không thể khởi tạo thanh toán");
       }
@@ -431,6 +455,36 @@ export default function RegisterPage({
       setIsSubmitting(false);
     }
   };
+
+  // Require login before registration
+  if (!authLoading && !user) {
+    return (
+      <div className="mx-auto max-w-container px-6 py-16 lg:px-20">
+        <div className="mx-auto max-w-md text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <User className="h-8 w-8 text-primary" />
+          </div>
+          <h2 className="mt-4 text-xl font-extrabold text-secondary">
+            Đăng nhập để tiếp tục
+          </h2>
+          <p className="mt-2 text-sm text-slate-500">
+            Bạn cần đăng nhập để đăng ký tham gia sự kiện
+          </p>
+          <Button
+            className="mt-6 bg-primary text-white hover:bg-primary/90"
+            onClick={() => signIn("google")}
+          >
+            Đăng nhập với Google
+          </Button>
+          <div className="mt-3">
+            <Link href={`/events/${id}`}>
+              <Button variant="outline">Quay lại sự kiện</Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
