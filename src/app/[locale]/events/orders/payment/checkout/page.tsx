@@ -18,7 +18,7 @@ import {
   User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { axiosInstance } from "@/lib/api/axiosInstance";
+import { AXIOS_INSTANCE as axiosInstance } from "@/lib/api/axiosInstance";
 
 interface PaymentInfo {
   qrCodeData: string;
